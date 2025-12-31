@@ -149,7 +149,7 @@ button:hover {
 
   <div id="countdown">Waiting for our moment…</div>
 
-  <button onclick="startExperience()">Begin 🤍</button>
+  <button id="beginBtn">Begin 🤍</button>
 </div>
 
 <div id="finalLove">
@@ -158,9 +158,11 @@ button:hover {
 </div>
 
 <script>
+/* Handle names with spaces automatically */
 const params = new URLSearchParams(window.location.search);
-const name = (params.get("name") || "my love").replace(/-/g," ");
+let name = (params.get("name") || "my love").replace(/-/g," ");
 
+/* Romantic message */
 document.getElementById("message").innerHTML = `
 As the last moments of this year slowly fade away,  
 <strong>${name}</strong>,  
@@ -172,36 +174,43 @@ all I wish for is to keep walking through life
 with my hand in yours, wherever it leads. 🤍
 `;
 
-let musicStarted = false;
-function startExperience() {
-  if (!musicStarted) {
-    document.getElementById("music").play();
-    musicStarted = true;
-  }
+const music = document.getElementById("music");
+const beginBtn = document.getElementById("beginBtn");
+
+/* Start experience on button click */
+beginBtn.addEventListener("click", () => {
+  music.play().catch(err => console.log("Autoplay blocked, click again", err));
+  startHearts();
+  startFireworks();
+  beginBtn.style.display = "none";
+});
+
+/* Floating hearts */
+function startHearts() {
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "🤍";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 20 + 18 + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 9000);
+  }, 600);
 }
 
-/* Hearts */
-setInterval(() => {
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerHTML = "🤍";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = Math.random() * 20 + 18 + "px";
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 9000);
-}, 600);
-
 /* Fireworks */
-setInterval(() => {
-  const fw = document.createElement("div");
-  fw.className = "firework";
-  fw.style.left = Math.random() * 100 + "vw";
-  fw.style.top = Math.random() * 50 + "vh";
-  document.body.appendChild(fw);
-  setTimeout(() => fw.remove(), 2200);
-}, 1800);
+function startFireworks() {
+  setInterval(() => {
+    const fw = document.createElement("div");
+    fw.className = "firework";
+    fw.style.left = Math.random() * 100 + "vw";
+    fw.style.top = Math.random() * 50 + "vh";
+    document.body.appendChild(fw);
+    setTimeout(() => fw.remove(), 2200);
+  }, 1800);
+}
 
-/* Countdown */
+/* Countdown to midnight */
 function getNextMidnight() {
   const midnight = new Date();
   midnight.setHours(24,0,0,0);
@@ -213,12 +222,11 @@ const finalLove = document.getElementById("finalLove");
 const finalName = document.getElementById("finalName");
 const midnight = getNextMidnight();
 
-const timer = setInterval(() => {
+setInterval(() => {
   const now = new Date();
   const diff = midnight - now;
 
   if (diff <= 0) {
-    clearInterval(timer);
     countdownEl.innerHTML = "✨ Happy New Year ✨";
     finalName.innerText = `${name}, now… tomorrow… always.`;
     finalLove.classList.add("show");
@@ -229,8 +237,7 @@ const timer = setInterval(() => {
   const m = Math.floor((diff / (1000 * 60)) % 60);
   const s = Math.floor((diff / 1000) % 60);
 
-  countdownEl.innerHTML =
-    `${h}h ${m}m ${s}s until midnight`;
+  countdownEl.innerHTML = `${h}h ${m}m ${s}s until midnight`;
 }, 1000);
 </script>
 
