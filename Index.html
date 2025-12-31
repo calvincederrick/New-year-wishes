@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy New Year, My Love 🤍</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Handwritten font -->
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Dancing Script', cursive;
+  background: radial-gradient(circle at top, #1b0a24, #000);
+  color: white;
+  overflow: hidden;
+  text-align: center;
+}
+
+.container {
+  opacity: 0;
+  animation: fadeIn 4s forwards;
+  padding: 40px 20px;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+h1 {
+  font-size: 2.6em;
+  color: #ffd1e8;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.4em;
+  line-height: 1.9;
+  max-width: 520px;
+  margin: auto;
+  color: #fff;
+}
+
+#countdown {
+  margin-top: 25px;
+  font-size: 1.4em;
+  color: #ffb6d9;
+}
+
+/* Floating hearts */
+.heart {
+  position: absolute;
+  color: #ff6fae;
+  animation: floatUp 9s linear infinite;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(100vh); opacity: 1; }
+  to { transform: translateY(-10vh); opacity: 0; }
+}
+
+/* Fireworks */
+.firework {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow:
+    0 0 #ff9acb,
+    12px 0 #ffd700,
+    -12px 0 #ff8fcf,
+    0 12px #fff,
+    0 -12px #ff9acb;
+  animation: explode 2.2s infinite ease-out;
+}
+
+@keyframes explode {
+  from { transform: scale(0); opacity: 1; }
+  to { transform: scale(3); opacity: 0; }
+}
+
+button {
+  margin-top: 30px;
+  padding: 12px 30px;
+  font-size: 1.2em;
+  background: #ff6fae;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  cursor: pointer;
+  font-family: 'Dancing Script', cursive;
+}
+button:hover {
+  background: #ff4f9a;
+}
+
+/* Final love screen */
+#finalLove {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 3s ease;
+}
+
+#finalLove.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#finalLove h2 {
+  color: #ff6fae;
+  font-size: 3em;
+  animation: heartbeat 1.6s infinite;
+}
+
+#finalLove p {
+  margin-top: 15px;
+  font-size: 1.6em;
+  color: #fff;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.1); }
+  40% { transform: scale(1); }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_52c7b91f2f.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+  <h1>Happy New Year, My Love ✨</h1>
+
+  <p id="message"></p>
+
+  <div id="countdown">Waiting for our moment…</div>
+
+  <button onclick="startExperience()">Begin 🤍</button>
+</div>
+
+<div id="finalLove">
+  <h2>I love you ❤️</h2>
+  <p id="finalName"></p>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const name = (params.get("name") || "my love").replace(/-/g," ");
+
+document.getElementById("message").innerHTML = `
+As the last moments of this year slowly fade away,  
+<strong>${name}</strong>,  
+I find myself grateful for something simple and rare — you.  
+
+You became my calm, my laughter, my quiet place.  
+And as a new year opens its arms to us,  
+all I wish for is to keep walking through life  
+with my hand in yours, wherever it leads. 🤍
+`;
+
+let musicStarted = false;
+function startExperience() {
+  if (!musicStarted) {
+    document.getElementById("music").play();
+    musicStarted = true;
+  }
+}
+
+/* Hearts */
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "🤍";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = Math.random() * 20 + 18 + "px";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 9000);
+}, 600);
+
+/* Fireworks */
+setInterval(() => {
+  const fw = document.createElement("div");
+  fw.className = "firework";
+  fw.style.left = Math.random() * 100 + "vw";
+  fw.style.top = Math.random() * 50 + "vh";
+  document.body.appendChild(fw);
+  setTimeout(() => fw.remove(), 2200);
+}, 1800);
+
+/* Countdown */
+function getNextMidnight() {
+  const midnight = new Date();
+  midnight.setHours(24,0,0,0);
+  return midnight;
+}
+
+const countdownEl = document.getElementById("countdown");
+const finalLove = document.getElementById("finalLove");
+const finalName = document.getElementById("finalName");
+const midnight = getNextMidnight();
+
+const timer = setInterval(() => {
+  const now = new Date();
+  const diff = midnight - now;
+
+  if (diff <= 0) {
+    clearInterval(timer);
+    countdownEl.innerHTML = "✨ Happy New Year ✨";
+    finalName.innerText = `${name}, now… tomorrow… always.`;
+    finalLove.classList.add("show");
+    return;
+  }
+
+  const h = Math.floor(diff / (1000 * 60 * 60));
+  const m = Math.floor((diff / (1000 * 60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
+
+  countdownEl.innerHTML =
+    `${h}h ${m}m ${s}s until midnight`;
+}, 1000);
+</script>
+
+</body>
+</html>
