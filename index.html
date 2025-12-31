@@ -80,21 +80,6 @@ p {
   to { transform: scale(3); opacity: 0; }
 }
 
-button {
-  margin-top: 30px;
-  padding: 12px 30px;
-  font-size: 1.2em;
-  background: #ff6fae;
-  border: none;
-  border-radius: 30px;
-  color: white;
-  cursor: pointer;
-  font-family: 'Dancing Script', cursive;
-}
-button:hover {
-  background: #ff4f9a;
-}
-
 /* Final love screen */
 #finalLove {
   position: fixed;
@@ -148,8 +133,6 @@ button:hover {
   <p id="message"></p>
 
   <div id="countdown">Waiting for our moment…</div>
-
-  <button id="beginBtn">Begin 🤍</button>
 </div>
 
 <div id="finalLove">
@@ -158,7 +141,7 @@ button:hover {
 </div>
 
 <script>
-/* Handle names with spaces automatically */
+/* Get name from URL */
 const params = new URLSearchParams(window.location.search);
 let name = (params.get("name") || "my love").replace(/-/g," ");
 
@@ -175,14 +158,16 @@ with my hand in yours, wherever it leads. 🤍
 `;
 
 const music = document.getElementById("music");
-const beginBtn = document.getElementById("beginBtn");
 
-/* Start experience on button click */
-beginBtn.addEventListener("click", () => {
-  music.play().catch(err => console.log("Autoplay blocked, click again", err));
+/* Attempt to auto-play music (may require tap on mobile) */
+window.addEventListener("load", () => {
+  music.play().catch(() => {
+    // fallback: play music on first tap if blocked
+    document.body.addEventListener("click", () => music.play(), { once: true });
+  });
+
   startHearts();
   startFireworks();
-  beginBtn.style.display = "none";
 });
 
 /* Floating hearts */
